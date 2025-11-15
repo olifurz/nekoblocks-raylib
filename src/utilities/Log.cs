@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -18,28 +19,32 @@ public static class Log
         Console.WriteLine(entry);
     }
 
-    public static void LogDebug(string message)
+    public static void Debug(string message)
     {
         Construct("DEBUG", message);
     }
-    public static void LogInfo(string message)
+    public static void Info(string message)
     {
         Construct("INFO", message);
     }
 
-    public static void LogWarning(string message)
+    public static WarningException Warning(string message)
     {
         Construct("WARN", message);
+        return new WarningException(message);
+
     }
 
-    public static void LogError(string message)
+    public static Exception Error(string message)
     {
         Construct("ERROR", message);
+        return new Exception(message);
     }
 
-    public static void LogCritical(string message)
+    public static Exception Critical(string message)
     {
         Construct("CRITICAL", message);
+        return new Exception(message);
     }
 
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]

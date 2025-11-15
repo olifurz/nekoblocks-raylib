@@ -9,6 +9,9 @@ using Raylib_cs;
 
 namespace Gorge.Services;
 
+/// <summary>
+/// Service to manage all physics-related events in the workspace
+/// </summary>
 public class PhysicsService : BaseService
 {
     readonly Jitter2.World world = new();
@@ -41,7 +44,6 @@ public class PhysicsService : BaseService
                 part.Transform.SetPosition(body.Position);
                 part.Transform.SetRotation(body.Orientation);
                 body.MotionType = part.Anchored ? MotionType.Static : MotionType.Dynamic;
-                Log.LogDebug(part.Name);
             }
         }
     }

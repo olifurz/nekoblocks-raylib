@@ -6,6 +6,9 @@ using Raylib_cs;
 
 namespace Gorge.Services;
 
+/// <summary>
+/// Service to manage rendering of all objects in the workspace
+/// </summary>
 public class RenderService : BaseService
 {
     WorkspaceService workspace = ServiceManager.GetService<WorkspaceService>();
@@ -23,26 +26,25 @@ public class RenderService : BaseService
         if (player == null) return;
 
         Raylib.BeginDrawing();
-        Raylib.ClearBackground(Color.White);
+        Raylib.ClearBackground(Color.Black);
 
         Raylib.DrawGrid(128, 4);
         Raylib.BeginMode3D(player.Camera);
 
         foreach (var item in workspace.Objects)
         {
-            if (item.GetType() == typeof(Part))
+            switch (item.GetType())
             {
-                var part = (Part)item;
-
-                switch (part.type)
-                {
-                    case Part.PartType.Brick:
-                        Transform.QuaternionToAxisAngle(part.Transform.Rotation, out var axis, out var angle);
-                        Raylib.DrawModelEx(part.Model, part.Transform.Position, axis, angle, part.Transform.Scale, Color.White);
-                        break;
-                }
+                case var value when value == typeof(Part):
+                    RenderPart((Part)item);
+                    break;
             }
         }
+
+        /*
+        if (workspace.Skybox != null)
+            RenderSkybox(workspace.Skybox);
+        */
 
         Raylib.EndMode3D();
 
@@ -53,5 +55,31 @@ public class RenderService : BaseService
     public override void Stop()
     {
         base.Stop();
+    }
+
+    /// Rendering Functions ///
+    private void RenderPart(Part part)
+    {
+        switch (part.type)
+        {
+            case Part.PartType.Brick:
+                Transform.QuaternionToAxisAngle(part.Transform.Rotation, out var axis, out var angle);
+                Raylib.DrawModelEx(part.Model, part.Transform.Position, axis, angle, part.Transform.Scale, Color.White);
+                break;
+        }
+    }
+
+    private void RenderSkybox(Skybox skybox)
+    {
+        Rlgl.DisableBackfaceCulling();
+        Rlgl.DisableDepthMask();
+        Raylib.DrawModel(skybox.model, Vector3.Zero, 1.0f, Color.White);
+        Rlgl.EnableBackfaceCulling();
+        Rlgl.EnableDepthMask();
+    }
+
+    private void RenderSkybox()
+    {
+
     }
 }

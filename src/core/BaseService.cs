@@ -1,5 +1,8 @@
 namespace Gorge.Core;
 
+/// <summary>
+/// Base service class that all services derive from
+/// </summary>
 public class BaseService
 {
     /// <summary>

@@ -45,8 +45,8 @@ public class Part : WorldObject
                 {
                     for (int i = 0; i < mesh.VertexCount * 2; i += 2)
                     {
-                        mesh.TexCoords[i + 0] *= Transform.Scale.X; // U
-                        mesh.TexCoords[i + 1] *= Transform.Scale.Z; // V
+                        mesh.TexCoords[i + 0] *= Transform.Scale.X * 128; // U
+                        mesh.TexCoords[i + 1] *= Transform.Scale.Z * 128; // V
                     }
                 }
                 // Raylib.UploadMesh(ref mesh, false);
@@ -54,11 +54,11 @@ public class Part : WorldObject
                 unsafe
                 {
                     int texCount = mesh.VertexCount * 2;
-                    for (int i = 0; i < texCount; i += 2) Log.LogDebug($"UV[{i / 2}]={mesh.TexCoords[i]},{mesh.TexCoords[i + 1]}");
+                    for (int i = 0; i < texCount; i += 2) Log.Debug($"UV[{i / 2}]={mesh.TexCoords[i]},{mesh.TexCoords[i + 1]}");
                 }
                 break;
         }
-        byte[] studImg = ServiceManager.GetService<ResourceService>().GetResource("assets.textures.stud.png");
+        byte[] studImg = ServiceManager.GetService<ResourceService>().GetResource("textures.stud.png");
         Texture2D texture = Raylib.LoadTextureFromImage(Raylib.LoadImageFromMemory(".png", studImg));
         Raylib.SetTextureWrap(texture, TextureWrap.Repeat);
 

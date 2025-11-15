@@ -2,13 +2,18 @@ using Gorge.Services;
 
 namespace Gorge.Core;
 
+/// <summary>
+/// Manager for starting, updating and stopping services.
+/// If you delete this, the engine dies.
+/// (don't kill the engine)
+/// </summary>
 public static class ServiceManager
 {
     private static readonly Dictionary<Type, BaseService> _services = new();
 
     public static void Initialise()
     {
-        Log.LogInfo("Initialising services");
+        Log.Info("Initialising services");
         // Order matters here !!
         RegisterService(new ResourceService());
         RegisterService(new WorkspaceService());
@@ -17,9 +22,16 @@ public static class ServiceManager
 
         foreach (var service in _services.Values)
         {
-            service.Start();
+            try
+            {
+                service.Start();
+            }
+            catch
+            {
+                throw Log.Critical($"Service failed to start ({service})");
+            }
         }
-        Log.LogInfo("Services initialised");
+        Log.Info("Services initialised");
     }
 
     public static void Update()
@@ -35,7 +47,7 @@ public static class ServiceManager
         foreach (var service in _services.Values)
         {
             service.Stop();
-            Log.LogInfo($"Stopped {service}");
+            Log.Info($"Stopped {service}");
         }
     }
 

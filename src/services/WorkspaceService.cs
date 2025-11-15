@@ -7,23 +7,22 @@ using Microsoft.VisualBasic;
 namespace Gorge.Services;
 
 /// <summary>
-/// Contains & manages all objects inside the game
+/// Service that contains & manages all objects inside the loaded game
 /// </summary>
 public class WorkspaceService : BaseService
 {
     public List<WorldObject> Objects = [];
 
-    Player? localPlayer;
+    private Player? localPlayer;
 
     private PhysicsService? physics;
-    Part part;
-    Part baseplate;
+    public Skybox Skybox;
     public override void Start()
     {
         base.Start();
         physics = ServiceManager.GetService<PhysicsService>();
 
-        baseplate = new Part(Part.PartType.Brick, Vector3.Zero, Quaternion.Identity, new Vector3(16, 1, 16));
+        var baseplate = new Part(Part.PartType.Brick, Vector3.Zero, Quaternion.Identity, new Vector3(16, 1, 16));
         baseplate.Name = "Baseplate";
         baseplate.Anchored = true;
         AddObject(baseplate);
@@ -31,6 +30,8 @@ public class WorkspaceService : BaseService
         localPlayer = new Player();
         localPlayer.Start();
         AddObject(localPlayer);
+
+        Skybox = new Skybox("textures.skybox.png", false);
     }
 
     public override void Update()
@@ -56,9 +57,8 @@ public class WorkspaceService : BaseService
         Objects.Add(obj);
         obj.Id = Objects.Count + 1;
 
-        Log.LogDebug("Appended object " + obj.Name);
         if (obj.GetType() == typeof(Part))
-            physics.AddBody((Part)obj);
+            physics?.AddBody((Part)obj);
 
         return obj.Id;
     }
