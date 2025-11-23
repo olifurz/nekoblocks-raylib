@@ -11,17 +11,24 @@ namespace Nekoblocks.Game.Player;
 /// </summary>
 public class Player : Instance
 {
-    public Camera3D Camera;
     private WorkspaceService workspaceService = ServiceManager.GetService<WorkspaceService>();
     public Character Character = new();
+
+    // Camera
+    // See https://en.wikipedia.org/wiki/Spherical_coordinate_system for more information on how position is calculated
+    public Camera3D Camera;
+    float camDistance = 3f;
+    float theta = 4.7f; // Temporary, just makes it start facing behind the player (probably)
+    float phi = 1f;
+    float camSensitivity = 0.2f;
     public Player()
     {
         Name = "Player";
         SetParent(workspaceService.Workspace);
         Camera = new Camera3D()
         {
-            Position = new Vector3(-20, 8, 10),
-            Target = new Vector3(0, 4, 0),
+            Position = Vector3.One,
+            Target = Vector3.Zero,
             Up = new Vector3(0, 1, 0),
             FovY = 80.0f,
             Projection = CameraProjection.Perspective
@@ -30,7 +37,45 @@ public class Player : Instance
     }
     public void Update()
     {
-        Raylib.UpdateCamera(ref Camera, CameraMode.Free);
+        Raylib.UpdateCamera(ref Camera, CameraMode.Custom);
+
         Character.Update();
+        UpdateCamera();
+    }
+
+    private void UpdateCamera()
+    {
+        var headPos = Character.BodyParts["Head"].Transform.Position;
+        var target = new Vector3(headPos.X, headPos.Y - 0.5f, headPos.Z);
+
+        if (Raylib.IsMouseButtonDown(MouseButton.Right))
+        {
+            var oldMousePos = Raylib.GetMousePosition();
+            Vector2 mouseDelta = Raylib.GetMouseDelta();
+
+            theta += Deg2Rad(mouseDelta.X * camSensitivity);
+            phi -= Deg2Rad(mouseDelta.Y * camSensitivity);
+            phi = Math.Clamp(phi, 0.01f, (float)Math.PI);
+            theta = (theta + 2 * (float)Math.PI) % (2 * (float)Math.PI);
+
+            Log.Debug($"θ={theta}, φ={phi}");
+
+            Raylib.SetMousePosition((int)oldMousePos.X, (int)oldMousePos.Y); // TODO: this doesn't seem to lock the mouse? Unsure if this is linux-specific or not
+        }
+
+        camDistance -= Raylib.GetMouseWheelMove() * 3;
+        camDistance = Math.Clamp(camDistance, 2, 40);
+
+        float x = target.X + (float)(camDistance * Math.Sin(phi) * Math.Cos(theta));
+        float y = target.Y + (float)(camDistance * Math.Cos(phi));
+        float z = target.Z + (float)(camDistance * Math.Sin(phi) * Math.Sin(theta)); // Remember Y is up
+
+        Camera.Position = new Vector3(x, y, z);
+        Camera.Target = target;
+    }
+
+    private float Deg2Rad(float degrees)
+    {
+        return degrees * (float)(Math.PI / 180);
     }
 }

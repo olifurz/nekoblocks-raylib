@@ -19,7 +19,7 @@ public class Part : Instance
 
     // Physics //
     public readonly Transform Transform = new();
-    public RigidBody? RigidBody;
+    public RigidBody RigidBody;
 
     private bool canCollide;
     public bool CanCollide
@@ -77,7 +77,7 @@ public class Part : Instance
             Transform.Scale.Z
         ];
 
-        Shader surfaceShader = resourceService.GetShader(null, "shaders.surfaces.fs");
+        Shader surfaceShader = resourceService.GetShader(null, "shaders.part.fs");
         Raylib.SetShaderValue(surfaceShader, Raylib.GetShaderLocation(surfaceShader, "tiling"), tiling, ShaderUniformDataType.Vec2);
         unsafe
         {

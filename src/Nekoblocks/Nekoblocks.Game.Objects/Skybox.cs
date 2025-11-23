@@ -5,13 +5,14 @@ using System.Numerics;
 
 namespace Nekoblocks.Game.Objects;
 
-public class Skybox
+public class Skybox : Instance
 {
     public Model Model { get; private set; }
     ResourceService resourceService = ServiceManager.GetService<ResourceService>();
 
     public Skybox(string filename, bool useHdr)
     {
+        Name = "Skybox";
         Mesh cube = Raylib.GenMeshCube(1, 1, 1);
         Model = Raylib.LoadModelFromMesh(cube);
 

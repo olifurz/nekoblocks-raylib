@@ -28,12 +28,6 @@ public class WorkspaceService : BaseService
         baseplate.Transform.SetScale(64, 1, 64);
         baseplate.SetParent(Workspace);
 
-        var part = new Part(Part.PartType.Brick);
-        part.Name = "Part";
-        part.Transform.Anchored = true;
-        part.Transform.SetPosition(5, 20, 10);
-        part.SetParent(Workspace);
-
         localPlayer = new Player();
         localPlayer.SetParent(Workspace);
 

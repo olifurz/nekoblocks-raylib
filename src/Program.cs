@@ -18,7 +18,6 @@ internal class Program
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(800, 600, "Nekoblocks");
         Raylib.SetTargetFPS(60);
-        Raylib.DisableCursor();
 
         ServiceManager.Initialise();
 
