@@ -11,6 +11,8 @@ namespace Nekoblocks.Game.Player;
 public class Character : Part
 {
     PhysicsService physicsService = ServiceManager.GetService<PhysicsService>();
+
+    float walkCycle = 0;
     public Dictionary<string, Part> BodyParts = new Dictionary<string, Part>
     {
         { "Head", new Part(PartType.Brick)},
@@ -55,12 +57,17 @@ public class Character : Part
                     break;
             }
         }
-
-        SetupConstraints();
     }
 
-    private void SetupConstraints()
+    public void StepWalkCycle()
     {
+        walkCycle++;
+        if (walkCycle > 60) walkCycle = 0;
+
+        var trans = BodyParts["LeftArm"].Transform;
+        var target = float.Lerp(-45, 45, walkCycle / 60);
+        trans.SetRotation(trans.Rotation.X, target, trans.Rotation.Z);
+        Log.Debug(target.ToString());
 
     }
 
@@ -72,6 +79,7 @@ public class Character : Part
     private void UpdateCharacter()
     {
         BodyParts["Torso"].Transform.SetPosition(Transform.Position.X, Transform.Position.Y + 0.5f, Transform.Position.Z);
+        BodyParts["Torso"].Transform.SetRotation(Transform.Rotation);
         Vector3 origin = BodyParts["Torso"].Transform.Position;
         BodyParts["Head"].Transform.SetPosition(origin.X, origin.Y + 1.5f, origin.Z);
         BodyParts["LeftArm"].Transform.SetPosition(origin.X - 1.5f, origin.Y, origin.Z);

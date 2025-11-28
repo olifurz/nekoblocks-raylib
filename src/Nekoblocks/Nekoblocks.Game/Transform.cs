@@ -62,9 +62,6 @@ public class Transform
     /// <summary>
     /// Set all 3 transform values
     /// </summary>
-    /// <param name="position">Position</param>
-    /// <param name="rotation">Rotation as a Quaternion</param>
-    /// <param name="scale">Scale</param>
     public void Set(Vector3 position, Quaternion rotation, Vector3 scale)
     {
         if (Position != position)
@@ -81,10 +78,6 @@ public class Transform
         }
     }
 
-    /// <summary>
-    /// Set the position of the transform
-    /// </summary>
-    /// <param name="position"></param>
     /// <param name="invokeEvent">A special bool used by the physics engine to disable invoking the PositionChanged event</param>
     /// My hope is that I'm never allowed to write physics code again, cause this is one nasty hack.
     public void SetPosition(Vector3 position, bool invokeEvent = true)
@@ -97,16 +90,29 @@ public class Transform
         SetPosition(new Vector3(x, y, z));
     }
 
-    /// <summary>
-    /// Set the rotation of the transform
-    /// </summary>
-    /// <param name="rotation"></param>
     /// <param name="invokeEvent">A special bool used by the physics engine to disable invoking the RotationChanged event</param>
     public void SetRotation(Quaternion rotation, bool invokeEvent = true)
     {
         Rotation = rotation;
         if (invokeEvent == true) RotationChanged?.Invoke(this);
     }
+    public void SetRotation(float x, float y, float z, float w)
+    {
+        Rotation = new Quaternion(x, y, z, w);
+    }
+    public void SetRotation(float yaw, float pitch, float roll)
+    {
+        Rotation = Quaternion.CreateFromYawPitchRoll(yaw, pitch, roll);
+    }
+    public void SetRotation(Vector3 rotation)
+    {
+        Rotation = Quaternion.CreateFromYawPitchRoll(rotation.X, rotation.Y, rotation.Z);
+    }
+    public void SetRotation(Vector3 axis, float angle)
+    {
+        Rotation = Quaternion.CreateFromAxisAngle(axis, angle);
+    }
+
     public void SetScale(Vector3 scale)
     {
         Scale = scale;

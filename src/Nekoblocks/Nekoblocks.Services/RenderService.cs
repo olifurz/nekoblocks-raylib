@@ -13,8 +13,10 @@ namespace Nekoblocks.Services;
 public class RenderService : BaseService
 {
     WorkspaceService workspace = ServiceManager.GetService<WorkspaceService>();
+    ResourceService resourceService = ServiceManager.GetService<ResourceService>();
 
     Player? player;
+
     public override void Start()
     {
         base.Start();

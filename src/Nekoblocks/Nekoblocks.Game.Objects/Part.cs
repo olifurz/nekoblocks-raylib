@@ -77,7 +77,7 @@ public class Part : Instance
             Transform.Scale.Z
         ];
 
-        Shader surfaceShader = resourceService.GetShader(null, "shaders.part.fs");
+        Shader surfaceShader = resourceService.GetShader(null, "shaders.surface.fs");
         Raylib.SetShaderValue(surfaceShader, Raylib.GetShaderLocation(surfaceShader, "tiling"), tiling, ShaderUniformDataType.Vec2);
         unsafe
         {
