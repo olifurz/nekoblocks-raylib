@@ -1,3 +1,5 @@
+> [!IMPORTANT]  
+> This has since moved to Godot as Raylib was too unnecessarily complex for this project.
 <div align="center">
     <img src="/assets/logos/logo.svg" width="400"/>
     <h3>Nekoblocks</h3>
